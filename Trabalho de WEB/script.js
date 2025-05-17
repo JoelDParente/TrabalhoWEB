@@ -8,14 +8,53 @@ const palavras = ["amigo", "anexo", "antes", "apito", "aviso", "banco", "barco",
   "poder", "praia", "prato", "prova", "quase", "quilo", "risco", "reino", "rosto", "roupa",
   "saber", "salas", "salto", "senso", "sonho", "tarde", "tempo", "terra", "tirar", "tomar",
   "trago", "troca", "troco", "turma", "unido", "vapor"];
-const linhas = document.getElementById('linha1');
+let palavraSeparada, num = 2, palavraDigitada;
+const inputs = document.querySelectorAll('.linha');
 
+function bloqueador() {
+  for (num; num <= 6; num++) {
+    const linha = document.querySelectorAll('.linha' + num);
+    linha.forEach(linha => {
+      linha.style.backgroundColor = '#30363D';
 
-function sorteador() {
+      linha.addEventListener('keydown', function bloqueador(event) {
+        event.preventDefault();
+      })
+
+      linha.addEventListener('paste', function bloqueiaColar(event) {
+        event.preventDefault();
+      })
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function inicializarJogo() {
   let indice = Math.floor(Math.random() * palavras.length);
-  return indice;  
-}
+  palavraSeparada = palavras[indice].split('');
+  console.log(palavras[indice]);
+  bloqueador();
+})
 
-function mudarInput() {
-  
-}
+inputs.forEach(input => {
+  input.addEventListener('keydown', function bloquearNumeros(event) {
+    if (event.key >= '0' && event.key <= '9') {
+      event.preventDefault();
+    }
+  })
+});
+
+document.addEventListener('keydown', function verificarIgualdade(event) {
+  let num = 1;
+  if (event.key == 'Enter') {
+    let linha = document.getElementsByClassName('linha' + num);
+    for (let index = 0; index < linha.length; index++) {
+      palavraDigitada[index] = linha[index].value
+      if (palavraSeparada[index] == palavraDigitada[index]) {
+        linha[index].style.backgroundColor = "green"
+      }
+      
+    }
+  }
+   
+
+});
