@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jogo Termo</title>
+  <style>
+    body {
+      background: #121213;
+      color: #ffffff;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .tabuleiro {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .linha {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      gap: 5px;
+    }
+    .celula {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #3a3a3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      background-color: #121213;
+    }
+    .correto {
+      background-color: #538d4e;
+      border-color: #538d4e;
+    }
+    .parcial {
+      background-color: #b59f3b;
+      border-color: #b59f3b;
+    }
+    .errado {
+      background-color: #3a3a3c;
+      border-color: #3a3a3c;
+    }
+    .teclado {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 5px;
+      max-width: 600px;
+      margin: auto;
+    }
+    .tecla {
+      padding: 15px 0;
+      background-color: #818384;
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tecla.grande {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Termo (Clone)</h1>
+  <div class="tabuleiro" id="tabuleiro"></div>
+  <div class="teclado" id="teclado"></div>
+  <p id="mensagem"></p>
+
+  <script>
+    const palavraSecreta = "nuvem";
+    let tentativaAtual = "";
+    let linhaAtual = 0;
+
+    const tabuleiro = document.getElementById("tabuleiro");
+    const teclado = document.getElementById("teclado");
+    const mensagem = document.getElementById("mensagem");
+
+    const letras = "qwertyuiopasdfghjklzxcvbnm";
+
+    // Cria grade do jogo
+    for (let i = 0; i < 6; i++) {
+      const linha = document.createElement("div");
+      linha.className = "linha";
+      for (let j = 0; j < 5; j++) {
+        const celula = document.createElement("div");
+        celula.className = "celula";
+        linha.appendChild(celula);
+      }
+      tabuleiro.appendChild(linha);
+    }
+
+    // Cria o teclado
+    function criarTeclado() {
+      [...letras].forEach(letra => {
+        const btn = document.createElement("button");
+        btn.className = "tecla";
+        btn.textContent = letra;
+        btn.onclick = () => adicionarLetra(letra);
+        teclado.appendChild(btn);
+      });
+
+      const enter = document.createElement("button");
+      enter.className = "tecla grande";
+      enter.textContent = "ENTER";
+      enter.onclick = verificar;
+      teclado.appendChild(enter);
+
+      const back = document.createElement("button");
+      back.className = "tecla grande";
+      back.textContent = "⌫";
+      back.onclick = apagarLetra;
+      teclado.appendChild(back);
+    }
+
+    criarTeclado();
+
+    function atualizarLinha() {
+      const linha = tabuleiro.children[linhaAtual];
+      for (let i = 0; i < 5; i++) {
+        const celula = linha.children[i];
+        celula.textContent = tentativaAtual[i] || "";
+      }
+    }
+
+    function adicionarLetra(letra) {
+      if (tentativaAtual.length < 5) {
+        tentativaAtual += letra;
+        atualizarLinha();
+      }
+    }
+
+    function apagarLetra() {
+      tentativaAtual = tentativaAtual.slice(0, -1);
+      atualizarLinha();
+    }
+
+    function verificar() {
+      if (tentativaAtual.length !== 5) {
+        mensagem.textContent = "Digite 5 letras.";
+        return;
+      }
+
+      const linha = tabuleiro.children[linhaAtual];
+      const palavra = palavraSecreta;
+      const status = Array(5).fill("errado");
+      const letrasUsadas = palavra.split("");
+
+      // 1ª passada - letras corretas
+      for (let i = 0; i < 5; i++) {
+        if (tentativaAtual[i] === palavra[i]) {
+          status[i] = "correto";
+          letrasUsadas[i] = null;
+        }
+      }
+
+      // 2ª passada - letras parciais
+      for (let i = 0; i < 5; i++) {
+        if (status[i] === "correto") continue;
+        const pos = letrasUsadas.indexOf(tentativaAtual[i]);
+        if (pos !== -1) {
+          status[i] = "parcial";
+          letrasUsadas[pos] = null;
+        }
+      }
+
+      // Atualiza cores das letras
+      for (let i = 0; i < 5; i++) {
+        linha.children[i].classList.add(status[i]);
+      }
+
+      if (tentativaAtual === palavra) {
+        mensagem.textContent = "🎉 Parabéns! Você acertou!";
+        teclado.innerHTML = "";
+      } else if (linhaAtual === 5) {
+        mensagem.textContent = `☹️ Fim de jogo! A palavra era "${palavra.toUpperCase()}"`;
+        teclado.innerHTML = "";
+      } else {
+        linhaAtual++;
+        tentativaAtual = "";
+      }
+    }
+
+    // Teclado físico
+    document.addEventListener("keydown", e => {
+      const tecla = e.key.toLowerCase();
+      if (tecla === "enter") {
+        verificar();
+      } else if (tecla === "backspace") {
+        apagarLetra();
+      } else if (/^[a-z]$/.test(tecla)) {
+        adicionarLetra(tecla);
+      }
+    });
+  </script>
+</body>
+</html>
