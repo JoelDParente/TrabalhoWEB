@@ -16,6 +16,17 @@ let letras = "qwertyuiopasdfghjklzxcvbnm";
 const tabuleiro = document.getElementById("tabuleiro");
 const teclado = document.getElementById("teclado");
 const mensagem = document.getElementById("mensagem");
+const toast = document.getElementById('feedback');
+
+const toastTrigger = document.getElementById('liveToastBtn')
+const toastLiveExample = document.getElementById('liveToast')
+
+if (toastTrigger) {
+  const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+  toastTrigger.addEventListener('click', () => {
+    toastBootstrap.show()
+  })
+}
 
 //Evento que inicializa o jogo, sorteia a palavra e cria o tabuleiro.
 document.addEventListener('DOMContentLoaded', function inicializarJogo() {
@@ -33,9 +44,12 @@ document.addEventListener('DOMContentLoaded', function inicializarJogo() {
     tabuleiro.appendChild(linha);
   }
 
+  console.log(palavraSecreta);
+  
+
 });
 
-function atualizarLinha() {
+function atualizarLinha() { 
   let linha = tabuleiro.children[linhaAtual];
   for (let i = 0; i < 5; i++) {
     let celula = linha.children[i];
@@ -105,7 +119,8 @@ function verificar() {
   }
 
   if (tentativaAtual === palavra) {
-    mensagem.textContent = " Parabéns! Você acertou!";
+    toast.innerHTML = `Parabéns, você ganhou !!!`
+    $('feedback').show();
     teclado.innerHTML = "";
   } else if (linhaAtual === 5) {
     mensagem.textContent = ``;

@@ -20,18 +20,19 @@ body {
   grid-template-rows: repeat(6, 1fr) !important;
   gap: 10px ;
   justify-content: center;
+  align-items: flex-end;
   margin-bottom: 20px;
 }
 
 .linha {
   display: grid;
   grid-template-columns: repeat(5, 60px);
-  gap: 5px;
+  gap: 18px;
 }
 
 .celula {
-  width: 60px;
-  height: 60px;
+  width: 75px;
+  height: 75px;
   border: 2px solid #3a3a3c;
   border-radius: 10px;
   display: flex;
@@ -65,15 +66,15 @@ body {
 }
 
 .teclado {
-  display: grid !important;
-  grid-template-columns: repeat(10, 1fr) !important;
-  gap: 5px !important;
-  max-width: 600px !important;
-  margin: auto !important;
+  display: grid ;
+  grid-template-columns: repeat(10, 1fr) ;
+  gap: 5px ;
+  max-width: 570px;
+  margin: auto ;
 }
 
 .tecla {
-  padding: 15px 0;
+  padding: 10px ;
   background-color: #818384;
   color: #fff;
   border: none;

@@ -11,6 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
     crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -27,14 +28,15 @@
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
         Regras
       </button>
-
+      
     </div>
   </div>
 </nav>
 
-  <div class="modal fade text-start" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+
+<div class="modal fade text-start" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="staticBackdropLabel">Regras</h1>
@@ -43,20 +45,20 @@
         <div class="modal-body">
           🎯 Objetivo do jogo <br>
           Descobrir a palavra secreta de 5 letras em no máximo 6 tentativas. <br> <br>
-
+          
           🕹️ Como jogar <br>
           Digite uma palavra válida de 5 letras e envie (geralmente pressionando Enter). <br>
-
+          
           Após cada tentativa, o jogo fornece dicas de cores para cada letra: <br>
-
+          
           <ul>
             <li>🟩 Verde (correto) – A letra está na posição certa. <br></li>
             <li>🟨 Amarelo (parcial) – A letra existe na palavra, mas está na posição errada. <br></li>
             <li>⬛ Cinza (errado) – A letra não está presente na palavra. <br></li>
           </ul>
-
+          
           Use o feedback de cores para ajustar suas próximas tentativas. <br> <br>
-
+          
           ⏱️ Regras adicionais <br>
           <ul>
             <li>As palavras tentadas devem existir no dicionário do jogo. <br></li>
@@ -65,18 +67,30 @@
           </ul>
         </div>
         <div class="modal-footer">
-           <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendi</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendi</button>
         </div>
       </div>
     </div>
   </div>
-
   
-  <div class="tabuleiro mt-5 p-4" id="tabuleiro"></div>
+  <div class="toast align-items-center justify-content-center text-bg-primary border-0 mt-5 top-0 start-50 translate-middle-x" role="alert" aria-live="assertive" aria-atomic="true" id="liveToast">
+   <div class="d-flex">
+     <div class="toast-body">
+       Hello, world! This is a toast message.
+     </div>
+     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+   </div>
+ </div>
+  
+  <div class="tabuleiro mt-5 p-5" id="tabuleiro"></div>
+  
   <div class="teclado" id="teclado"></div>
+  
+  <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+  
   <p id="mensagem"></p>
-
-
+  
+  
 </body>
    
 <script src="script.js" defer></script>
