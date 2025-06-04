@@ -34,49 +34,11 @@ document.addEventListener('DOMContentLoaded', function inicializarJogo() {
   }
 
 });
-//Habilita o teclado para escrever.
-document.addEventListener("keydown", e => {
-  let tecla = e.key.toLowerCase();
-  if (tecla === "enter") {
-    verificar();
-  } else if (tecla === "backspace") {
-    apagarLetra();
-  } else if (/^[a-z]$/.test(tecla)) {
-    adicionarLetra(tecla);
-  }
-});
-
-//Cria o teclado digital, digamos...
-function criarTeclado() {
-  [...letras].forEach(letra => {
-    const btn = document.createElement("button");
-    btn.className = "tecla";
-    btn.textContent = letra;
-    btn.onclick = () => adicionarLetra(letra);
-    teclado.appendChild(btn);
-  });
-
-  const enter = document.createElement("button");
-  enter.className = "tecla grande";
-  enter.textContent = "ENTER";
-  enter.onclick = verificar();
-  teclado.appendChild(enter);
-
-  const apagar = document.createElement("button");
-  apagar.className = "tecla grande";
-  apagar.textContent = "⌫";
-  apagar.onclick = apagarLetra();
-  teclado.appendChild(apagar);
-}
-
-criarTeclado();
 
 function atualizarLinha() {
   let linha = tabuleiro.children[linhaAtual];
   for (let i = 0; i < 5; i++) {
     let celula = linha.children[i];
-    console.log(linha.children[i]);
-    
     celula.textContent = tentativaAtual[i] || "";
   }
 }
@@ -124,7 +86,22 @@ function verificar() {
 
   //atualiza a linha atual
   for (let i = 0; i < 5; i++) {
-    linha.children[i].classList.add(status[i]);
+    const letra = tentativaAtual[i];
+    const celula = linha.children[i];
+    celula.classList.add(status[i]);
+
+    // Atualiza a tecla correspondente
+    const tecla = document.querySelector(`.tecla[data-letra="${letra}"]`);
+    if (tecla) {
+      if (
+        tecla.classList.contains("correto") ||
+        (tecla.classList.contains("parcial") && status[i] === "errado")
+      ) {
+        continue;
+      }
+      tecla.classList.remove("errado", "parcial", "correto");
+      tecla.classList.add(status[i]);
+    }
   }
 
   if (tentativaAtual === palavra) {
@@ -138,3 +115,41 @@ function verificar() {
     tentativaAtual = "";
   }
 }
+
+//Cria o teclado digital, digamos...
+function criarTeclado() {
+  [...letras].forEach(letra => {
+    const btn = document.createElement("button");
+    btn.className = "tecla";
+    btn.textContent = letra;
+    btn.setAttribute("data-letra", letra); 
+    btn.onclick = () => adicionarLetra(letra);
+    teclado.appendChild(btn);
+  });
+
+  const enter = document.createElement("button");
+  enter.className = "tecla grande";
+  enter.textContent = "ENTER";
+  enter.onclick = verificar;
+  teclado.appendChild(enter);
+
+  const apagar = document.createElement("button");
+  apagar.className = "tecla grande";
+  apagar.textContent = "⌫";
+  apagar.onclick = apagarLetra;
+  teclado.appendChild(apagar);
+}
+
+criarTeclado();
+
+//Habilita o teclado para escrever.
+document.addEventListener("keydown", e => {
+  let tecla = e.key.toLowerCase();
+  if (tecla === "enter") {
+    verificar();
+  } else if (tecla === "backspace") {
+    apagarLetra();
+  } else if (/^[a-z]$/.test(tecla)) {
+    adicionarLetra(tecla);
+  }
+});
